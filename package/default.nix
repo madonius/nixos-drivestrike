@@ -1,4 +1,4 @@
-{ stdenv, dpkg, fetchurl, glib, autoPatchelfHook, libsoup, dmidecode }:
+{ lib, stdenv, makeWrapper, dpkg, fetchurl, glib, autoPatchelfHook, libsoup, dmidecode }:
 let
   version = "2.1.21-2";
   rpath = stdenv.lib.makeLibraryPath [
@@ -21,9 +21,9 @@ in stdenv.mkDerivation {
 
   inherit src;
 
-  nativeBuildInputs = [ autoPatchelfHook glib ];
+  nativeBuildInputs = [ autoPatchelfHook glib makeWrapper ];
 
-  buildInputs = [ dpkg libsoup ];
+  buildInputs = [ dpkg libsoup dmidecode ];
 
   dontUnpack = true;
 
@@ -36,4 +36,8 @@ in stdenv.mkDerivation {
 	chmod -R g-w $out
   '';
 
+  postFixup = ''
+	wrapProgram $out/bin/drivestrike \
+	--prefix PATH ":" "${lib.makeBinPath [ dmidecode ]}"
+  '';
 }
