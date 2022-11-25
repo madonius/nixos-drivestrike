@@ -1,4 +1,4 @@
-{ stdenv, dpkg, fetchurl, glib, autoPatchelfHook, libsoup }:
+{ stdenv, dpkg, fetchurl, glib, autoPatchelfHook, libsoup, dmidecode }:
 let
   version = "2.1.21-2";
   rpath = stdenv.lib.makeLibraryPath [
@@ -23,7 +23,7 @@ in stdenv.mkDerivation {
 
   nativeBuildInputs = [ autoPatchelfHook glib ];
 
-  buildInputs = [ dpkg libsoup];
+  buildInputs = [ dpkg libsoup ];
 
   dontUnpack = true;
 
