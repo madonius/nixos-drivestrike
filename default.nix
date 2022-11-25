@@ -1,4 +1,4 @@
-{ stdenv, dpkg }:
+{ stdenv, dpkg, fetchurl, glib, autoPatchelfHook, libsoup }:
 let
   version = "2.1.21-2";
   rpath = stdenv.lib.makeLibraryPath [
@@ -6,7 +6,7 @@ let
   ] + ":${stdenv.cc.cc.lib}/lib64";
 
   src = 
-	if stdenv.hostPlatform.system = "x86_64-linux" then
+	if stdenv.hostPlatform.system == "x86_64-linux" then
 	  fetchurl {
 		urls = [ "https://app.drivestrike.com/static/apt/pool/main/d/drivestrike/drivestrike_${version}_amd64.deb" ];
 		sha256 = "059m3x387kjz4j3c0sbz3wdbh2dn0dxq1rq8vhdbf5m3bswc3i4d";
@@ -21,11 +21,11 @@ in stdenv.mkDerivation {
 
   inherit src;
 
-  nativeBuildInputs = [ glib ];
+  nativeBuildInputs = [ autoPatchelfHook glib ];
 
-  buildInputs = [ dpkg ];
+  buildInputs = [ dpkg libsoup];
 
-  dontUpack = true;
+  dontUnpack = true;
 
   installPhase = ''
 	mkdir -p $out
@@ -36,10 +36,4 @@ in stdenv.mkDerivation {
 	chmod -R g-w $out
   '';
 
-  meta = with stdenv.lib; {
-	description = "Drivestrike for Linux";
-	homepage = "https://drivestrike.com";
-	license = licenses.unfree;
-	platforms = [ "x86_64-linux" ];
-  }
 }
