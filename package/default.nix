@@ -1,4 +1,6 @@
-{ lib, stdenv, makeWrapper, dpkg, fetchurl, glib, autoPatchelfHook, libsoup, dmidecode }:
+{ lib, stdenv, makeWrapper, dpkg, fetchurl,
+  glib, glib-networking, wrapGAppsHook,
+  autoPatchelfHook, libsoup, dmidecode }:
 let
   version = "2.1.21-2";
   rpath = stdenv.lib.makeLibraryPath [
@@ -21,7 +23,7 @@ in stdenv.mkDerivation {
 
   inherit src;
 
-  nativeBuildInputs = [ autoPatchelfHook glib makeWrapper ];
+  nativeBuildInputs = [ autoPatchelfHook wrapGAppsHook glib glib-networking makeWrapper ];
 
   buildInputs = [ dpkg libsoup dmidecode ];
 
